@@ -3,7 +3,7 @@
 //  SCTwitter
 //
 //  Created by Lucas Correa on 29/02/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Siriuscode Solutions. All rights reserved.
 //
 
 #import "SCTwitterViewController.h"
@@ -22,6 +22,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //Loading
+    loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+	loadingView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
+	UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+	[loadingView addSubview:aiView];
+	[aiView startAnimating];
+	aiView.center =  CGPointMake(160, 240);
+	[aiView release];
+	[self.view addSubview:loadingView];
+	loadingView.hidden = YES;
 }
 
 - (void)viewDidUnload
@@ -54,13 +65,65 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return NO;
 }
 
-- (IBAction)loginButtonAction:(id)sender {
+#pragma mark - Button Action
+
+- (IBAction)loginButtonAction:(id)sender 
+{
+    loadingView.hidden = NO;
     
-    [SCTwitter loginViewControler:self callBack:^(BOOL success, id result){
-        NSLog(@"Passou %i - %@", success, result);
+    [SCTwitter loginViewControler:self callback:^(BOOL success){
+        loadingView.hidden = YES;
+        NSLog(@"Login is Success -  %i", success);
     }];
 }
+
+- (IBAction)logoutButtonAction:(id)sender 
+{
+    loadingView.hidden = NO;
+    
+    [SCTwitter logoutCallback:^(BOOL success) {
+        loadingView.hidden = YES;
+        NSLog(@"Logout is Success -  %i", success);        
+    }];
+}
+
+- (IBAction)postBackgroundButtonAction:(id)sender 
+{
+    loadingView.hidden = NO;
+    
+    [SCTwitter postWithMessage:@"Test in SCTwitter Framework #sctwitter #ios #iphone" callback:^(BOOL success, id result) {
+        loadingView.hidden = YES;
+        NSLog(@"Message send -  %i \n%@", success, result);        
+    }];
+}
+
+- (IBAction)publicTimelineButtonAction:(id)sender 
+{
+    loadingView.hidden = NO;
+    
+    [SCTwitter getPublicTimelineWithCallback:^(BOOL success, id result) {
+        loadingView.hidden = YES;
+        if (success) {
+            //Return array NSDictonary
+            NSLog(@"%@", result);
+        } 
+    }];
+}
+
+- (IBAction)userTimelineButtonAction:(id)sender 
+{
+    loadingView.hidden = NO;
+    
+    [SCTwitter getUserTimelineFor:@"lucasc0rrea" sinceID:0 startingAtPage:0 count:200 callback:^(BOOL success, id result) {
+        loadingView.hidden = YES;
+        if (success) {
+            //Return array NSDictonary
+            NSLog(@"%@", result);
+        } 
+    }];
+}
+
 @end

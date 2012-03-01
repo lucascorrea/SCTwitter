@@ -132,7 +132,6 @@
 		F99446DE14FEF6370017A5D8 = {
 			isa = PBXGroup;
 			children = (
-				F99447D514FEFD590017A5D8 /* libxml2.2.7.3.dylib */,
 				F99446F314FEF6370017A5D8 /* SCTwitter */,
 				F994471114FEFB840017A5D8 /* Other Sources */,
 			);
@@ -149,6 +148,7 @@
 		F99446EC14FEF6370017A5D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F99447D514FEFD590017A5D8 /* libxml2.2.7.3.dylib */,
 				F99446ED14FEF6370017A5D8 /* UIKit.framework */,
 				F99446EF14FEF6370017A5D8 /* Foundation.framework */,
 				F99446F114FEF6370017A5D8 /* CoreGraphics.framework */,
@@ -159,14 +159,10 @@
 		F99446F314FEF6370017A5D8 /* SCTwitter */ = {
 			isa = PBXGroup;
 			children = (
-				F99446FC14FEF6370017A5D8 /* SCTwitterAppDelegate.h */,
-				F99446FD14FEF6370017A5D8 /* SCTwitterAppDelegate.m */,
-				F99446FF14FEF6370017A5D8 /* MainStoryboard.storyboard */,
-				F994470214FEF6370017A5D8 /* SCTwitterViewController.h */,
-				F994470314FEF6370017A5D8 /* SCTwitterViewController.m */,
-				F99446F414FEF6370017A5D8 /* Supporting Files */,
 				F994470E14FEFB1B0017A5D8 /* SCTwitter.h */,
 				F994470F14FEFB1B0017A5D8 /* SCTwitter.m */,
+				F99448F115001E4E0017A5D8 /* Classes */,
+				F99446F414FEF6370017A5D8 /* Supporting Files */,
 			);
 			path = SCTwitter;
 			sourceTree = "<group>";
@@ -293,6 +289,18 @@
 				F99448DC14FFF99F0017A5D8 /* twitter_load.png */,
 			);
 			path = SAOAuthTwitterEngine;
+			sourceTree = "<group>";
+		};
+		F99448F115001E4E0017A5D8 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				F99446FC14FEF6370017A5D8 /* SCTwitterAppDelegate.h */,
+				F99446FD14FEF6370017A5D8 /* SCTwitterAppDelegate.m */,
+				F99446FF14FEF6370017A5D8 /* MainStoryboard.storyboard */,
+				F994470214FEF6370017A5D8 /* SCTwitterViewController.h */,
+				F994470314FEF6370017A5D8 /* SCTwitterViewController.m */,
+			);
+			name = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

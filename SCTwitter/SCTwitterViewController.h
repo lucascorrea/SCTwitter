@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SCTwitterViewController : UIViewController
+- (IBAction)loginButtonAction:(id)sender;
 
 @end

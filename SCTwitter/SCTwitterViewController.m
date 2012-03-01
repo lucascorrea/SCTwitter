@@ -7,6 +7,7 @@
 //
 
 #import "SCTwitterViewController.h"
+#import "SCTwitter.h"
 
 @implementation SCTwitterViewController
 
@@ -21,7 +22,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
 }
 
 - (void)viewDidUnload
@@ -57,4 +57,10 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+- (IBAction)loginButtonAction:(id)sender {
+    
+    [SCTwitter loginViewControler:self callBack:^(BOOL success, id result){
+        NSLog(@"Passou %i - %@", success, result);
+    }];
+}
 @end

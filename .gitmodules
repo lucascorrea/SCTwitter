@@ -1,3 +1,3 @@
-[submodule "SCTwitter/ExternalFrameworks/MGTwitterEngine"]
-	path = SCTwitter/ExternalFrameworks/MGTwitterEngine
-	url = https://github.com/mattgemmell/MGTwitterEngine.git
+[submodule "SCTwitter/ExternalFrameworks/Twitter-OAuth-iPhone"]
+	path = SCTwitter/ExternalFrameworks/Twitter-OAuth-iPhone
+	url = https://github.com/bengottlieb/Twitter-OAuth-iPhone.git

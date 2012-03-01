@@ -22,14 +22,14 @@
 		F99446ED14FEF6370017A5D8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F99446EF14FEF6370017A5D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F99446F114FEF6370017A5D8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		F99446F514FEF6370017A5D8 /* SCTwitter-Info.plist */ = {isa = PBXFileReference; path = "SCTwitter-Info.plist"; sourceTree = "<group>"; };
+		F99446F514FEF6370017A5D8 /* SCTwitter-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SCTwitter-Info.plist"; sourceTree = "<group>"; };
 		F99446F714FEF6370017A5D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F99446F914FEF6370017A5D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		F99446FB14FEF6370017A5D8 /* SCTwitter-Prefix.pch */ = {isa = PBXFileReference; path = "SCTwitter-Prefix.pch"; sourceTree = "<group>"; };
-		F99446FC14FEF6370017A5D8 /* SCTwitterAppDelegate.h */ = {isa = PBXFileReference; path = SCTwitterAppDelegate.h; sourceTree = "<group>"; };
+		F99446FB14FEF6370017A5D8 /* SCTwitter-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SCTwitter-Prefix.pch"; sourceTree = "<group>"; };
+		F99446FC14FEF6370017A5D8 /* SCTwitterAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCTwitterAppDelegate.h; sourceTree = "<group>"; };
 		F99446FD14FEF6370017A5D8 /* SCTwitterAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCTwitterAppDelegate.m; sourceTree = "<group>"; };
 		F994470014FEF6370017A5D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		F994470214FEF6370017A5D8 /* SCTwitterViewController.h */ = {isa = PBXFileReference; path = SCTwitterViewController.h; sourceTree = "<group>"; };
+		F994470214FEF6370017A5D8 /* SCTwitterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCTwitterViewController.h; sourceTree = "<group>"; };
 		F994470314FEF6370017A5D8 /* SCTwitterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCTwitterViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

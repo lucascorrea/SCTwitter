@@ -47,8 +47,7 @@ To use the component is very easy. Import the header for your class.
 	@implementation ViewController
 
 	#pragma mark - Button Action
-	- (IBAction)login:(id)sender {
-	    
+	- (IBAction)login:(id)sender {    
 	 [SCTwitter loginViewControler:self callback:^(BOOL success){
     
      }];
@@ -56,7 +55,6 @@ To use the component is very easy. Import the header for your class.
 	
 	- (IBAction)postBackgroundButtonAction:(id)sender 
 	{
-    
     	[SCTwitter postWithMessage:messageText.text callback:^(BOOL success, id result) {
     
     	}];
@@ -64,7 +62,6 @@ To use the component is very easy. Import the header for your class.
     
     - (IBAction)userTimelineButtonAction:(id)sender 
 	{
-    
 	    [SCTwitter getUserTimelineFor:@"lucasc0rrea" sinceID:0 startingAtPage:0 count:200 callback:^(BOOL success, id result) {
         if (success) {
             //Return array NSDictonary

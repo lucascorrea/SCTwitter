@@ -116,11 +116,11 @@
 		F99448DA14FFF99F0017A5D8 /* SA_OAuthTwitterEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SA_OAuthTwitterEngine.h; sourceTree = "<group>"; };
 		F99448DB14FFF99F0017A5D8 /* SA_OAuthTwitterEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SA_OAuthTwitterEngine.m; sourceTree = "<group>"; };
 		F99448DC14FFF99F0017A5D8 /* twitter_load.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter_load.png; sourceTree = "<group>"; };
-		F99448F4150119500017A5D8 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		F99448F61501195B0017A5D8 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		F99448F4150119500017A5D8 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../icon.png; sourceTree = "<group>"; };
+		F99448F61501195B0017A5D8 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "../icon@2x.png"; sourceTree = "<group>"; };
 		F9A4ACCF1501474500D73407 /* backgroundButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = backgroundButton.png; path = Resources/images/backgroundButton.png; sourceTree = "<group>"; };
-		F9A4ACD1150149A200D73407 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		F9A4ACD3150149AB00D73407 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		F9A4ACD1150149A200D73407 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
+		F9A4ACD3150149AB00D73407 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,10 +142,6 @@
 		F99446DE14FEF6370017A5D8 = {
 			isa = PBXGroup;
 			children = (
-				F9A4ACD3150149AB00D73407 /* Default@2x.png */,
-				F9A4ACD1150149A200D73407 /* Default.png */,
-				F99448F61501195B0017A5D8 /* icon@2x.png */,
-				F99448F4150119500017A5D8 /* icon.png */,
 				F99446F314FEF6370017A5D8 /* SCTwitter */,
 				F9A4ACCD1501472300D73407 /* Resources */,
 				F994471114FEFB840017A5D8 /* Other Sources */,
@@ -330,6 +326,10 @@
 		F9A4ACCE1501473300D73407 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				F9A4ACD3150149AB00D73407 /* Default@2x.png */,
+				F9A4ACD1150149A200D73407 /* Default.png */,
+				F99448F61501195B0017A5D8 /* icon@2x.png */,
+				F99448F4150119500017A5D8 /* icon.png */,
 				F9A4ACCF1501474500D73407 /* backgroundButton.png */,
 			);
 			name = images;

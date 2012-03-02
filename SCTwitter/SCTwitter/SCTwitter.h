@@ -49,6 +49,7 @@ typedef void(^SCTwitterDirectCallback)(BOOL success, id result);
 @property (nonatomic, copy) SCTwitterUserCallback userCallback;
 @property (nonatomic, copy) SCTwitterDirectCallback directCallback;
 
+
 + (SCTwitter *)shared;
 + (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
 + (void)logoutCallback:(void(^)(BOOL success))aCallback;

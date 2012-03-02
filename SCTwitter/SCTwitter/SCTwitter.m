@@ -323,7 +323,6 @@ static SCTwitter *_scTwitter = nil;
     }
 }
 
-
 - (void)userInfoReceived:(NSArray *)userInfo forRequest:(NSString *)connectionIdentifier
 {
     if (self.userCallback) {
@@ -331,7 +330,6 @@ static SCTwitter *_scTwitter = nil;
         self.userCallback = nil;
     }
 }
-
 
 - (void)directMessagesReceived:(NSArray *)messages forRequest:(NSString *)connectionIdentifier
 {

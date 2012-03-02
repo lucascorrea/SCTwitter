@@ -151,9 +151,21 @@
         if (success) {
             //Return array NSDictonary
             NSLog(@"%@", result);
-        } 
+        }else{
+            NSLog(@"Error : %@", result);
+        }
     }];
 }
+
+#pragma mark - 
+#pragma mark - UITextFieldDelegate methods
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
 
 - (void)dealloc {
     [messageText release];

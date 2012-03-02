@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SCTwitterViewController : UIViewController
+@interface SCTwitterViewController : UIViewController <UITextFieldDelegate>
 
 @property (retain, nonatomic) IBOutlet UITextField *messageText;
 

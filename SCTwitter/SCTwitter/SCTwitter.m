@@ -33,6 +33,8 @@
 - (void)postWithMessage:(NSString *)message callback:(void (^)(BOOL success, id result))aCallback;
 - (void)getPublicTimelineWithCallback:(void (^)(BOOL success, id result))aCallback;
 - (void)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)page count:(int)count callback:(void (^)(BOOL success, id result))aCallback;
+- (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
+- (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 - (BOOL)isSessionValid;
 
 @end
@@ -43,7 +45,8 @@
 
 @synthesize loginCallback;
 @synthesize statusCallback;
-
+@synthesize userCallback;
+@synthesize directCallback;
 
 #pragma mark -
 #pragma mark Singleton
@@ -109,6 +112,20 @@ static SCTwitter *_scTwitter = nil;
     [[SCTwitter shared] getUserTimelineFor:username sinceID:sinceID startingAtPage:page count:count callback:aCallback];
 }
 
++ (void)getUserInformationCallback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] getUserInformationFor:nil callback:aCallback];
+}
+
++ (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] getUserInformationFor:username callback:aCallback];
+}
+
++ (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] directMessage:message to:username callback:aCallback];
+}
 
 
 #pragma mark -
@@ -198,7 +215,46 @@ static SCTwitter *_scTwitter = nil;
     }
 }
 
+- (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback
+{
+    if (![self isSessionValid]) {
+        
+        // Call the login callback if we have one
+        if (aCallback) {
+            aCallback(NO, @"Error");
+        }
+        
+    }else{
+        
+        if (username == nil) {
+            username = _engine.username;
+        }
+        
+        self.userCallback = aCallback;
+        [_engine getUserInformationFor:username];
+    }
+}
 
+- (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback
+{
+    if (![self isSessionValid]) {
+        
+        // Call the login callback if we have one
+        if (aCallback) {
+            aCallback(NO, @"Error");
+        }
+        
+    }else{
+        
+        if (username == nil) {
+            aCallback(NO, @"No username");
+            return;
+        }
+        
+        self.directCallback = aCallback;
+        [_engine sendDirectMessage:message to:username];
+    }
+}
 
 #pragma mark -
 #pragma mark - SA_OAuthTwitterControllerDelegate methods
@@ -208,6 +264,7 @@ static SCTwitter *_scTwitter = nil;
     // Call the login callback
     if (self.loginCallback) {
         self.loginCallback(YES);
+        self.loginCallback = nil;
     }
 }
 
@@ -249,13 +306,38 @@ static SCTwitter *_scTwitter = nil;
 {
     if (self.statusCallback) {
         self.statusCallback(NO, error);
-    }   
+        self.statusCallback = nil;
+    }
+    
+    if (self.userCallback) {
+        self.userCallback(NO, error);
+        self.userCallback = nil;
+    }
 }
 
 - (void)statusesReceived:(NSArray *)statuses forRequest:(NSString *)connectionIdentifier
 {
     if (self.statusCallback) {
         self.statusCallback(YES, statuses);
+        self.statusCallback = nil;
+    }
+}
+
+
+- (void)userInfoReceived:(NSArray *)userInfo forRequest:(NSString *)connectionIdentifier
+{
+    if (self.userCallback) {
+        self.userCallback(YES, userInfo);
+        self.userCallback = nil;
+    }
+}
+
+
+- (void)directMessagesReceived:(NSArray *)messages forRequest:(NSString *)connectionIdentifier
+{
+    if (self.directCallback) {
+        self.directCallback(YES, messages);
+        self.directCallback = nil;
     }
 }
 

@@ -36,6 +36,9 @@
 
 typedef void(^SCTwitterCallback)(BOOL success);
 typedef void(^SCTwitterStatusCallback)(BOOL success, id result);
+typedef void(^SCTwitterUserCallback)(BOOL success, id result);
+typedef void(^SCTwitterDirectCallback)(BOOL success, id result);
+
 @interface SCTwitter : NSObject <SA_OAuthTwitterEngineDelegate, SA_OAuthTwitterControllerDelegate>{
     SA_OAuthTwitterEngine *_engine;
     UIViewController *_viewController;
@@ -43,6 +46,8 @@ typedef void(^SCTwitterStatusCallback)(BOOL success, id result);
 
 @property (nonatomic, copy) SCTwitterCallback loginCallback;
 @property (nonatomic, copy) SCTwitterStatusCallback statusCallback;
+@property (nonatomic, copy) SCTwitterUserCallback userCallback;
+@property (nonatomic, copy) SCTwitterDirectCallback directCallback;
 
 + (SCTwitter *)shared;
 + (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
@@ -50,5 +55,8 @@ typedef void(^SCTwitterStatusCallback)(BOOL success, id result);
 + (void)postWithMessage:(NSString *)message callback:(void (^)(BOOL success, id result))aCallback;
 + (void)getPublicTimelineWithCallback:(void (^)(BOOL success, id result))aCallback;
 + (void)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)page count:(int)count callback:(void (^)(BOOL success, id result))aCallback;
++ (void)getUserInformationCallback:(void (^)(BOOL success, id result))aCallback;
++ (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
++ (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 
 @end

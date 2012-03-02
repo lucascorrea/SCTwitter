@@ -10,6 +10,7 @@
 #import "SCTwitter.h"
 
 @implementation SCTwitterViewController
+@synthesize messageText;
 
 - (void)didReceiveMemoryWarning
 {
@@ -37,6 +38,7 @@
 
 - (void)viewDidUnload
 {
+    [self setMessageText:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -94,7 +96,7 @@
 {
     loadingView.hidden = NO;
     
-    [SCTwitter postWithMessage:@"Test in SCTwitter Framework #sctwitter #ios #iphone" callback:^(BOOL success, id result) {
+    [SCTwitter postWithMessage:messageText.text callback:^(BOOL success, id result) {
         loadingView.hidden = YES;
         NSLog(@"Message send -  %i \n%@", success, result);        
     }];
@@ -124,6 +126,38 @@
             NSLog(@"%@", result);
         } 
     }];
+}
+
+- (IBAction)userInformationButtonAction:(id)sender 
+{
+    loadingView.hidden = NO;
+    
+    [SCTwitter getUserInformationCallback:^(BOOL success, id result) {
+        loadingView.hidden = YES;
+        if (success) {
+            //Return array NSDictonary
+            NSLog(@"%@", result);
+        }         
+    }];
+}
+
+- (IBAction)directMessageButtonAction:(id)sender 
+{
+    loadingView.hidden = NO;
+    
+    [SCTwitter directMessage:messageText.text to:nil callback:^(BOOL success, id result) {
+
+        loadingView.hidden = YES;
+        if (success) {
+            //Return array NSDictonary
+            NSLog(@"%@", result);
+        } 
+    }];
+}
+
+- (void)dealloc {
+    [messageText release];
+    [super dealloc];
 }
 
 @end

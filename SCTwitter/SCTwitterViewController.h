@@ -9,10 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface SCTwitterViewController : UIViewController
+
+@property (retain, nonatomic) IBOutlet UITextField *messageText;
+
 - (IBAction)loginButtonAction:(id)sender;
 - (IBAction)logoutButtonAction:(id)sender;
 - (IBAction)postBackgroundButtonAction:(id)sender;
 - (IBAction)publicTimelineButtonAction:(id)sender;
 - (IBAction)userTimelineButtonAction:(id)sender;
+- (IBAction)userInformationButtonAction:(id)sender;
+- (IBAction)directMessageButtonAction:(id)sender;
 
 @end

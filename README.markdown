@@ -1,6 +1,6 @@
 The SCTwitter framework is to facilitate the implementation of twitter, simpler and cleaner using blocks
 
-![]( http://www.lucascorrea.com/sctwitter.png)
+![]( http://www.lucascorrea.com/sctwitter2.png)
 
 Installation
 =================

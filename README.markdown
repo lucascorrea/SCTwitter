@@ -6,7 +6,7 @@ Installation
 =================
 Run the command
 
-	https://github.com/lucascorrea/SCTwitter.git
+	git clone https://github.com/lucascorrea/SCTwitter.git
 
 Then we need to get the submodules
 

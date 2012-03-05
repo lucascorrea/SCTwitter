@@ -26,7 +26,7 @@ In the class `SCTwitter.h` need to add the credentials of your Twitter app as ex
 Methods
 ===========
 
-There is 08 methods:
+There is 09 methods:
 
 	+ (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
 	+ (void)logoutCallback:(void(^)(BOOL success))aCallback;
@@ -36,7 +36,7 @@ There is 08 methods:
 	+ (void)getUserInformationCallback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
-
+	+ (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 
 Example Usage
 =============

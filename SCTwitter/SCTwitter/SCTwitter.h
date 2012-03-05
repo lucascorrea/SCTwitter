@@ -59,5 +59,6 @@ typedef void(^SCTwitterDirectCallback)(BOOL success, id result);
 + (void)getUserInformationCallback:(void (^)(BOOL success, id result))aCallback;
 + (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 + (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
++ (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 
 @end

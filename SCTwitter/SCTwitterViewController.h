@@ -19,5 +19,6 @@
 - (IBAction)userTimelineButtonAction:(id)sender;
 - (IBAction)userInformationButtonAction:(id)sender;
 - (IBAction)directMessageButtonAction:(id)sender;
+- (IBAction)retweetButtonAction:(id)sender;
 
 @end

@@ -157,6 +157,21 @@
     }];
 }
 
+- (IBAction)retweetButtonAction:(id)sender 
+{
+    [SCTwitter retweetMessage:nil callback:^(BOOL success, id result) {
+        loadingView.hidden = YES;
+        
+        if (success) {
+            //Return array NSDictonary
+            NSLog(@"%@", result);
+        }else{
+            NSLog(@"%@", result);
+        }
+    }];
+
+}
+
 #pragma mark - 
 #pragma mark - UITextFieldDelegate methods
 

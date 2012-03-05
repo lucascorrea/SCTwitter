@@ -35,6 +35,7 @@
 - (void)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)page count:(int)count callback:(void (^)(BOOL success, id result))aCallback;
 - (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 - (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
+- (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 - (BOOL)isSessionValid;
 
 @end
@@ -125,6 +126,11 @@ static SCTwitter *_scTwitter = nil;
 + (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback
 {
     [[SCTwitter shared] directMessage:message to:username callback:aCallback];
+}
+
++ (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] retweetMessage:updateID callback:aCallback];
 }
 
 
@@ -253,6 +259,27 @@ static SCTwitter *_scTwitter = nil;
         
         self.directCallback = aCallback;
         [_engine sendDirectMessage:message to:username];
+    }
+}
+
+- (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback
+{
+    if (![self isSessionValid]) {
+        
+        // Call the login callback if we have one
+        if (aCallback) {
+            aCallback(NO, @"Error");
+        }
+        
+    }else{
+        
+        if (updateID == nil) {
+            aCallback(NO, @"No updateID");
+            return;
+        }
+        
+        self.statusCallback = aCallback;
+        [_engine sendRetweet:updateID];
     }
 }
 

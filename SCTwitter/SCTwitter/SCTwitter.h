@@ -51,6 +51,7 @@ typedef void(^SCTwitterDirectCallback)(BOOL success, id result);
 
 
 + (SCTwitter *)shared;
++ (BOOL)isSessionValid;
 + (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
 + (void)logoutCallback:(void(^)(BOOL success))aCallback;
 + (void)postWithMessage:(NSString *)message callback:(void (^)(BOOL success, id result))aCallback;

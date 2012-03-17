@@ -88,6 +88,11 @@ static SCTwitter *_scTwitter = nil;
 #pragma mark - 
 #pragma mark Public Methods Class
 
++ (BOOL)isSessionValid
+{
+   return [[SCTwitter shared] isSessionValid];
+}
+
 + (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback
 {
     [[SCTwitter shared] loginViewControler:aViewController callback:aCallback];

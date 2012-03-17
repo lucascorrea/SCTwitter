@@ -22,7 +22,15 @@ In the class `SCTwitter.h` need to add the credentials of your Twitter app as ex
  
 	#define kConsumerKey @"CONSUMER_KEY"
 	#define kConsumerSecret @"CONSUMER_SECRET"	
+
+In your project will build on Settings > Header Search Paths - and add this line below
 	
+	${SDKROOT}/usr/include/libxml2
+
+Finally add the framework
+
+	libxml2.dylib
+
 Methods
 ===========
 

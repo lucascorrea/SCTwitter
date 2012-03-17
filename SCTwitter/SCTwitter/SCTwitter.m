@@ -25,8 +25,13 @@
 
 
 #import "SCTwitter.h"
+#import "SA_OAuthTwitterController.h"
+#import "SA_OAuthTwitterEngine.h"
 
-@interface SCTwitter()
+@interface SCTwitter() <SA_OAuthTwitterEngineDelegate, SA_OAuthTwitterControllerDelegate> {
+    SA_OAuthTwitterEngine *_engine;
+    UIViewController *_viewController;
+}
 
 - (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
 - (void)logoutCallback:(void (^)(BOOL success))aCallback;
@@ -52,19 +57,12 @@
 #pragma mark -
 #pragma mark Singleton
 
-static SCTwitter *_scTwitter = nil;
 
-+ (SCTwitter *)shared {
-    
-    @synchronized (self){
-        
-        static dispatch_once_t pred;
-        
-        dispatch_once(&pred, ^{
-            _scTwitter = [[SCTwitter alloc] init];
-        });
-    }
-    
++ (SCTwitter *)shared
+{
+	static dispatch_once_t pred;
+	static SCTwitter *_scTwitter = nil;
+	dispatch_once(&pred, ^{ _scTwitter = [[SCTwitter alloc] init]; });
     return _scTwitter;
 }
 

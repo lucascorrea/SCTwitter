@@ -12,11 +12,6 @@
 @implementation SCTwitterViewController
 @synthesize messageText;
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
-}
 
 #pragma mark - View lifecycle
 
@@ -39,35 +34,15 @@
 - (void)viewDidUnload
 {
     [self setMessageText:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+	[super viewDidUnload];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return NO;
+    return (UIInterfaceOrientationPortrait == interfaceOrientation);
 }
 
 
@@ -98,7 +73,7 @@
 {
     loadingView.hidden = NO;
     
-    [SCTwitter postWithMessage:messageText.text callback:^(BOOL success, id result) {
+    [SCTwitter postWithMessage:self.messageText.text callback:^(BOOL success, id result) {
         loadingView.hidden = YES;
         NSLog(@"Message send -  %i \n%@", success, result);        
     }];
@@ -147,8 +122,7 @@
 {
     loadingView.hidden = NO;
     
-    [SCTwitter directMessage:messageText.text to:nil callback:^(BOOL success, id result) {
-        
+    [SCTwitter directMessage:self.messageText.text to:nil callback:^(BOOL success, id result) {
         loadingView.hidden = YES;
         if (success) {
             //Return array NSDictonary
@@ -185,7 +159,7 @@
 
 
 - (void)dealloc {
-    [messageText release];
+    [self setMessageText:nil];
     [super dealloc];
 }
 

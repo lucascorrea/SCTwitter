@@ -25,9 +25,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "SA_OAuthTwitterController.h"
-#import "SA_OAuthTwitterEngine.h"
-
 #warning Replace these with your own app credentials
 #define kConsumerKey @"D6vneoIuMP0pdBZJAV7gg"
 #define kConsumerSecret @"wWc59eahiaES9ZCZ7wp28Rw4hcURG4fmIXvvwJiaR8"
@@ -39,18 +36,14 @@ typedef void(^SCTwitterStatusCallback)(BOOL success, id result);
 typedef void(^SCTwitterUserCallback)(BOOL success, id result);
 typedef void(^SCTwitterDirectCallback)(BOOL success, id result);
 
-@interface SCTwitter : NSObject <SA_OAuthTwitterEngineDelegate, SA_OAuthTwitterControllerDelegate>{
-    SA_OAuthTwitterEngine *_engine;
-    UIViewController *_viewController;
-}
+
+@interface SCTwitter : NSObject
 
 @property (nonatomic, copy) SCTwitterCallback loginCallback;
 @property (nonatomic, copy) SCTwitterStatusCallback statusCallback;
 @property (nonatomic, copy) SCTwitterUserCallback userCallback;
 @property (nonatomic, copy) SCTwitterDirectCallback directCallback;
 
-
-+ (SCTwitter *)shared;
 + (BOOL)isSessionValid;
 + (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
 + (void)logoutCallback:(void(^)(BOOL success))aCallback;

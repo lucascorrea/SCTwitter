@@ -28,6 +28,7 @@
 
 @interface SCTwitter()
 
+- (BOOL)isSessionValid;
 - (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
 - (void)logoutCallback:(void (^)(BOOL success))aCallback;
 - (void)postWithMessage:(NSString *)message callback:(void (^)(BOOL success, id result))aCallback;
@@ -36,7 +37,7 @@
 - (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 - (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 - (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
-- (BOOL)isSessionValid;
+- (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
 
 @end
 
@@ -48,6 +49,8 @@
 @synthesize statusCallback;
 @synthesize userCallback;
 @synthesize directCallback;
+
+
 
 #pragma mark -
 #pragma mark Singleton
@@ -137,6 +140,18 @@ static SCTwitter *_scTwitter = nil;
 {
     [[SCTwitter shared] retweetMessage:updateID callback:aCallback];
 }
+
++ (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image callback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] postWithMessage:message uploadPhoto:image latitude:0 longitude:0 callback:aCallback];
+}
+
++ (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] postWithMessage:message uploadPhoto:image latitude:lat longitude:lng callback:aCallback];
+}
+
+
 
 
 #pragma mark -
@@ -287,6 +302,25 @@ static SCTwitter *_scTwitter = nil;
         [_engine sendRetweet:updateID];
     }
 }
+
+- (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback
+{
+    if (![self isSessionValid]) {
+        
+        // Call the login callback if we have one
+        if (aCallback) {
+            aCallback(NO, @"Error");
+        }
+        
+    }else{
+                
+        self.statusCallback = aCallback;
+        [_engine sendUpdate:message uploadPhoto:image latitude:lat longitude:lng]; 
+    }
+}
+
+
+
 
 #pragma mark -
 #pragma mark - SA_OAuthTwitterControllerDelegate methods

@@ -70,6 +70,8 @@
     return NO;
 }
 
+
+
 #pragma mark - Button Action
 
 - (IBAction)loginButtonAction:(id)sender 
@@ -146,7 +148,7 @@
     loadingView.hidden = NO;
     
     [SCTwitter directMessage:messageText.text to:nil callback:^(BOOL success, id result) {
-
+        
         loadingView.hidden = YES;
         if (success) {
             //Return array NSDictonary
@@ -169,7 +171,7 @@
             NSLog(@"%@", result);
         }
     }];
-
+    
 }
 
 #pragma mark - 

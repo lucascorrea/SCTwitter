@@ -361,7 +361,7 @@
 		F99446E014FEF6370017A5D8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = F99446E314FEF6370017A5D8 /* Build configuration list for PBXProject "SCTwitter" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -503,7 +503,6 @@
 				INFOPLIST_FILE = "SCTwitter/SCTwitter-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/SCTwitter/ExternalFrameworks/Twitter+OAuth/Libraries & Headers\"",
 					"\"$(SRCROOT)/SCTwitter/ExternalFrameworks/Twitter-OAuth-iPhone/Twitter+OAuth/Libraries & Headers\"",
 				);
 				OTHER_CODE_SIGN_FLAGS = "";
@@ -522,7 +521,6 @@
 				INFOPLIST_FILE = "SCTwitter/SCTwitter-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/SCTwitter/ExternalFrameworks/Twitter+OAuth/Libraries & Headers\"",
 					"\"$(SRCROOT)/SCTwitter/ExternalFrameworks/Twitter-OAuth-iPhone/Twitter+OAuth/Libraries & Headers\"",
 				);
 				OTHER_CODE_SIGN_FLAGS = "";

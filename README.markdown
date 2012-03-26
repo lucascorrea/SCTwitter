@@ -34,8 +34,9 @@ Finally add the framework
 Methods
 ===========
 
-There is 09 methods:
+There is 12 methods:
 
+	+ (BOOL)isSessionValid;
 	+ (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
 	+ (void)logoutCallback:(void(^)(BOOL success))aCallback;
 	+ (void)postWithMessage:(NSString *)message callback:(void (^)(BOOL success, id result))aCallback;
@@ -45,6 +46,9 @@ There is 09 methods:
 	+ (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
+	+ (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image callback:(void (^)(BOOL success, id result))aCallback;
+	+ (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
+
 
 Example Usage
 =============

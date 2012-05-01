@@ -43,7 +43,7 @@
 - (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 - (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 - (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
-
+- (void)postWithMessage:(NSString *)message replyToStatusId:(unsigned long)replyTo latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
 @end
 
 
@@ -147,6 +147,16 @@
 + (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback
 {
     [[SCTwitter shared] postWithMessage:message uploadPhoto:image latitude:lat longitude:lng callback:aCallback];
+}
+
++ (void)postWithMessage:(NSString *)message latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] postWithMessage:message replyToStatusId:0 latitude:lat longitude:lng callback:aCallback];
+}
+
++ (void)postWithMessage:(NSString *)message replyToStatusId:(unsigned long)replyTo latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] postWithMessage:message replyToStatusId:replyTo latitude:lat longitude:lng callback:aCallback];
 }
 
 
@@ -317,6 +327,22 @@
     }
 }
 
+- (void)postWithMessage:(NSString *)message replyToStatusId:(unsigned long)replyTo latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback
+{
+    if (![self isSessionValid]) {
+        
+        // Call the login callback if we have one
+        if (aCallback) {
+            aCallback(NO, @"Error");
+        }
+        
+    }else{
+        
+        self.statusCallback = aCallback;
+        [_engine sendUpdate:message inReplyTo:replyTo latitude:lat longitude:lng];
+    }
+}
+
 
 
 
@@ -332,6 +358,15 @@
     }
 }
 
+
+- (void)OAuthTwitterControllerCanceled:(SA_OAuthTwitterController *)controller
+{
+    // Call the login callback
+    if (self.loginCallback) {
+        self.loginCallback(NO);
+        self.loginCallback = nil;
+    }   
+}
 
 
 #pragma mark -

@@ -25,9 +25,7 @@
 
 #import <Foundation/Foundation.h>
 
-#warning Replace these with your own app credentials
-#define kConsumerKey @"D6vneoIuMP0pdBZJAV7gg"
-#define kConsumerSecret @"wWc59eahiaES9ZCZ7wp28Rw4hcURG4fmIXvvwJiaR8"
+#define Alert(title,msg)  [[[[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] autorelease] show];
 
 #define kTwitterData @"twitterData"
 
@@ -44,6 +42,8 @@ typedef void(^SCTwitterDirectCallback)(BOOL success, id result);
 @property (nonatomic, copy) SCTwitterUserCallback userCallback;
 @property (nonatomic, copy) SCTwitterDirectCallback directCallback;
 
+
++ (void)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 + (BOOL)isSessionValid;
 + (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
 + (void)logoutCallback:(void(^)(BOOL success))aCallback;
@@ -53,7 +53,7 @@ typedef void(^SCTwitterDirectCallback)(BOOL success, id result);
 + (void)getUserInformationCallback:(void (^)(BOOL success, id result))aCallback;
 + (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 + (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
-+ (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
++ (void)retweetMessageUpdateID:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 + (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image callback:(void (^)(BOOL success, id result))aCallback;
 + (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
 

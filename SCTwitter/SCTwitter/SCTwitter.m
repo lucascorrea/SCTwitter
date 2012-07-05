@@ -41,7 +41,7 @@
 - (void)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)page count:(int)count callback:(void (^)(BOOL success, id result))aCallback;
 - (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 - (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
-- (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
+- (void)retweetMessageUpdateID:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 - (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
 - (void)postWithMessage:(NSString *)message replyToStatusId:(unsigned long)replyTo latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
 @end
@@ -58,7 +58,7 @@
 
 
 #pragma mark -
-#pragma mark Singleton
+#pragma mark - Singleton
 
 
 + (SCTwitter *)shared
@@ -69,25 +69,15 @@
     return _scTwitter;
 }
 
-- (SCTwitter *) init
-{
-	self = [super init];
-	if (self != nil){
-        
-        // Initialize Twitter
-        _engine = [[SA_OAuthTwitterEngine alloc] initOAuthWithDelegate:self];  
-        _engine.consumerKey    = kConsumerKey;
-        _engine.consumerSecret = kConsumerSecret;
-        
-    }
-    
-	return self;
-}
-
 
 
 #pragma mark - 
-#pragma mark Public Methods Class
+#pragma mark - Public Methods
+
++ (void)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret
+{
+    [[SCTwitter shared] initWithConsumerKey:consumerKey consumerSecret:consumerSecret];
+}
 
 + (BOOL)isSessionValid
 {
@@ -134,9 +124,9 @@
     [[SCTwitter shared] directMessage:message to:username callback:aCallback];
 }
 
-+ (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback
++ (void)retweetMessageUpdateID:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback
 {
-    [[SCTwitter shared] retweetMessage:updateID callback:aCallback];
+    [[SCTwitter shared] retweetMessageUpdateID:updateID callback:aCallback];
 }
 
 + (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image callback:(void (^)(BOOL success, id result))aCallback
@@ -163,7 +153,15 @@
 
 
 #pragma mark -
-#pragma mark Private Methods
+#pragma mark - Private Methods
+
+- (void)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret
+{
+    // Initialize Twitter
+    _engine = [[SA_OAuthTwitterEngine alloc] initOAuthWithDelegate:self];  
+    _engine.consumerKey    = consumerKey;
+    _engine.consumerSecret = consumerSecret;
+}
 
 - (BOOL)isSessionValid 
 {
@@ -172,18 +170,30 @@
 
 - (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback
 {
-    if ([self isSessionValid]) {
+    if (!_engine.consumerKey || !_engine.consumerSecret) {
+        NSString *error = @"Missing your application credentials ConsumerKey and ConsumerSecret. You cannot run the app until you provide this in the code.";
         
-        // Call the login callback if we have one
+        Alert(@"ERROR", error);
+        
         if (aCallback) {
-            aCallback(YES);
+            aCallback(NO);
+            [aCallback release];
         }
-        
-    } else {
-        // Autorize twitter
-        self.loginCallback = aCallback;
-        UIViewController *twitterController = [SA_OAuthTwitterController controllerToEnterCredentialsWithTwitterEngine:_engine delegate:self];  
-        [aViewController presentModalViewController:twitterController animated: YES];     
+        return;
+    }else {
+        if ([self isSessionValid]) {
+            
+            // Call the login callback if we have one
+            if (aCallback) {
+                aCallback(YES);
+            }
+            
+        } else {
+            // Autorize twitter
+            self.loginCallback = aCallback;
+            UIViewController *twitterController = [SA_OAuthTwitterController controllerToEnterCredentialsWithTwitterEngine:_engine delegate:self];  
+            [aViewController presentModalViewController:twitterController animated: YES];     
+        }
     }
 }
 
@@ -193,9 +203,7 @@
     
     // Remove the stored twitter credentials
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    
     [defaults removeObjectForKey:kTwitterData];
-    
     [defaults synchronize];
     
     // Call the logout callback
@@ -281,7 +289,7 @@
     }else{
         
         if (username == nil) {
-            aCallback(NO, @"No username");
+            aCallback(NO, @"No username entered for Direct Message");
             return;
         }
         
@@ -290,7 +298,7 @@
     }
 }
 
-- (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback
+- (void)retweetMessageUpdateID:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback
 {
     if (![self isSessionValid]) {
         
@@ -347,7 +355,7 @@
 
 
 #pragma mark -
-#pragma mark - SA_OAuthTwitterControllerDelegate methods
+#pragma mark - SA_OAuthTwitterControllerDelegate Methods
 
 - (void) OAuthTwitterController: (SA_OAuthTwitterController *) controller authenticatedWithUsername: (NSString *) username 
 {
@@ -357,6 +365,23 @@
         self.loginCallback = nil;
     }
 }
+
+- (void) OAuthTwitterControllerFailed: (SA_OAuthTwitterController *) controller
+{
+    if (self.loginCallback) {
+        self.loginCallback(NO);
+        self.loginCallback = nil;
+    }
+}
+
+- (void) OAuthTwitterControllerCanceled: (SA_OAuthTwitterController *) controller
+{
+    if (self.loginCallback) {
+        self.loginCallback(NO);
+        self.loginCallback = nil;
+    }    
+}
+
 
 
 - (void)OAuthTwitterControllerCanceled:(SA_OAuthTwitterController *)controller
@@ -370,7 +395,7 @@
 
 
 #pragma mark -
-#pragma mark - SA_OAuthTwitterEngineDelegate methods
+#pragma mark - SA_OAuthTwitterEngineDelegate Methods
 
 - (void) storeCachedTwitterOAuthData: (NSString *) data forUsername: (NSString *) username 
 {

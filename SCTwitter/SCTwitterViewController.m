@@ -10,6 +10,7 @@
 #import "SCTwitter.h"
 
 @implementation SCTwitterViewController
+
 @synthesize messageText;
 
 
@@ -55,7 +56,10 @@
     
     [SCTwitter loginViewControler:self callback:^(BOOL success){
         loadingView.hidden = YES;
-        NSLog(@"Login is Success -  %i", success);
+        if (success) {
+            NSLog(@"Login is Success -  %i", success);
+            Alert(@"Alert", @"Success");            
+        }
     }];
 }
 
@@ -66,6 +70,7 @@
     [SCTwitter logoutCallback:^(BOOL success) {
         loadingView.hidden = YES;
         NSLog(@"Logout is Success -  %i", success);        
+        Alert(@"Alert", @"Logout successfully");
     }];
 }
 
@@ -75,7 +80,12 @@
     
     [SCTwitter postWithMessage:self.messageText.text callback:^(BOOL success, id result) {
         loadingView.hidden = YES;
-        NSLog(@"Message send -  %i \n%@", success, result);        
+        if (success) {
+            NSLog(@"Message send -  %i \n%@", success, result); 
+            Alert(@"Alert", @"Send message in background");            
+        }else {
+            Alert(@"Alert", @"Not Login");            
+        }
     }];
 }
 
@@ -88,6 +98,9 @@
         if (success) {
             //Return array NSDictonary
             NSLog(@"%@", result);
+            Alert(@"Alert", @"Request public timeline success");
+        }else {
+            Alert(@"Alert", @"Not Login");   
         } 
     }];
 }
@@ -101,7 +114,10 @@
         if (success) {
             //Return array NSDictonary
             NSLog(@"%@", result);
-        } 
+                Alert(@"Alert", @"Request user timeline success");
+        }else {
+            Alert(@"Alert", @"Not Login");   
+        }
     }];
 }
 
@@ -114,6 +130,9 @@
         if (success) {
             //Return array NSDictonary
             NSLog(@"%@", result);
+            Alert(@"Alert", @"Request user information success");   
+        }else {
+            Alert(@"Alert", @"Not Login");   
         }         
     }];
 }
@@ -129,24 +148,31 @@
             NSLog(@"%@", result);
         }else{
             NSLog(@"Error : %@", result);
+            Alert(@"Alert", result);
         }
     }];
 }
 
 - (IBAction)retweetButtonAction:(id)sender 
 {
-    [SCTwitter retweetMessage:nil callback:^(BOOL success, id result) {
+    loadingView.hidden = NO;
+    
+    [SCTwitter retweetMessageUpdateID:nil callback:^(BOOL success, id result) {
         loadingView.hidden = YES;
         
         if (success) {
             //Return array NSDictonary
             NSLog(@"%@", result);
+            Alert(@"Alert", @"Request retweet success");   
         }else{
             NSLog(@"%@", result);
+            Alert(@"Alert", @"Error retweet");   
         }
     }];
     
 }
+
+
 
 #pragma mark - 
 #pragma mark - UITextFieldDelegate methods

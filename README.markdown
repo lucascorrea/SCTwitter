@@ -17,11 +17,19 @@ Then we need to get the submodules
 Getting Started
 =================
 Now we need to copy the `SCTwitter.h` `SCTwitter.m` and `Twitter+OAuth` for your project.
+	
+Now in it's `AppDelegate` need to add credentials ConsumerKey and ConsumerSecret
 
-In the class `SCTwitter.h` need to add the credentials of your Twitter app as example:
- 
-	#define kConsumerKey @"CONSUMER_KEY"
-	#define kConsumerSecret @"CONSUMER_SECRET"	
+	#import "SCTwitter.h"
+	@implementation AppDelegate
+
+	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+	{       
+    		//Your application credentials ConsumerKey and ConsumerSecret Twitter
+    		[SCTwitter initWithConsumerKey:@"D6vneoIuMP0pdBZJAV7gg" consumerSecret:@"wWc59eahiaES9ZCZ7wp28Rw4hcURG4fmIXvvwJiaR8"];
+    		return YES;
+	}
+
 
 In your project will build on Settings > Header Search Paths - and add this line below
 	
@@ -45,7 +53,7 @@ There is 12 methods:
 	+ (void)getUserInformationCallback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
-	+ (void)retweetMessage:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
+	+ (void)retweetMessageUpdateID:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image callback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
 

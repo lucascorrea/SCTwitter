@@ -35,6 +35,7 @@
 - (void)viewDidUnload
 {
     [self setMessageText:nil];
+    [self setBackground:nil];
 	[super viewDidUnload];
 }
 
@@ -77,7 +78,6 @@
 - (IBAction)postBackgroundButtonAction:(id)sender 
 {
     loadingView.hidden = NO;
-    
     [SCTwitter postWithMessage:self.messageText.text callback:^(BOOL success, id result) {
         loadingView.hidden = YES;
         if (success) {
@@ -186,6 +186,7 @@
 
 - (void)dealloc {
     [self setMessageText:nil];
+    [_background release];
     [super dealloc];
 }
 

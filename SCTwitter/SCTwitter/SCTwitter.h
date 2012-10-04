@@ -52,6 +52,8 @@ typedef void(^SCTwitterDirectCallback)(BOOL success, id result);
 + (void)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)page count:(int)count callback:(void (^)(BOOL success, id result))aCallback;
 + (void)getUserInformationCallback:(void (^)(BOOL success, id result))aCallback;
 + (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
++ (void)getFriendsCallback:(void (^)(BOOL success, id result))aCallback;
++ (void)getFollowersCallback:(void (^)(BOOL success, id result))aCallback;
 + (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 + (void)retweetMessageUpdateID:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 + (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image callback:(void (^)(BOOL success, id result))aCallback;

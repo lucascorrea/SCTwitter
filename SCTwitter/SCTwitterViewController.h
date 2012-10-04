@@ -11,6 +11,7 @@
 @interface SCTwitterViewController : UIViewController <UITextFieldDelegate>
 
 @property (retain, nonatomic) IBOutlet UITextField *messageText;
+@property (retain, nonatomic) IBOutlet UIImageView *background;
 
 - (IBAction)loginButtonAction:(id)sender;
 - (IBAction)logoutButtonAction:(id)sender;

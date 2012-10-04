@@ -40,6 +40,8 @@
 - (void)getPublicTimelineWithCallback:(void (^)(BOOL success, id result))aCallback;
 - (void)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)page count:(int)count callback:(void (^)(BOOL success, id result))aCallback;
 - (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
+- (void)getFriendsCallback:(void (^)(BOOL success, id result))aCallback;
+- (void)getFollowersCallback:(void (^)(BOOL success, id result))aCallback;
 - (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 - (void)retweetMessageUpdateID:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 - (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
@@ -116,6 +118,16 @@
 + (void)getUserInformationFor:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback
 {
     [[SCTwitter shared] getUserInformationFor:username callback:aCallback];
+}
+
++ (void)getFriendsCallback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] getFriendsCallback:aCallback];
+}
+
++ (void)getFollowersCallback:(void (^)(BOOL success, id result))aCallback
+{
+    [[SCTwitter shared] getFollowersCallback:aCallback];
 }
 
 + (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback
@@ -265,6 +277,38 @@
         [_engine getUserInformationFor:username];
     }
 }
+
+- (void)getFriendsCallback:(void (^)(BOOL success, id result))aCallback;
+{
+    if (![self isSessionValid]) {
+        
+        // Call the login callback if we have one
+        if (aCallback) {
+            aCallback(NO, @"Error");
+        }
+        
+    }else{
+        self.userCallback = aCallback;
+        [_engine getFriends];
+    }
+}
+
+
+- (void)getFollowersCallback:(void (^)(BOOL success, id result))aCallback;
+{
+    if (![self isSessionValid]) {
+        
+        // Call the login callback if we have one
+        if (aCallback) {
+            aCallback(NO, @"Error");
+        }
+        
+    }else{
+        self.userCallback = aCallback;
+        [_engine getFollowers];
+    }
+}
+
 
 - (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback
 {

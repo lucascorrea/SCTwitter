@@ -174,11 +174,10 @@
     if (!_engine.consumerKey || !_engine.consumerSecret) {
         NSString *error = @"Missing your application credentials ConsumerKey and ConsumerSecret. You cannot run the app until you provide this in the code.";
         
-        Alert(@"ERROR", error);
+        SCAlert(@"ERROR", error);
         
         if (aCallback) {
             aCallback(NO);
-            [aCallback release];
         }
         return;
     }else {
@@ -193,7 +192,7 @@
             // Autorize twitter
             self.loginCallback = aCallback;
             UIViewController *twitterController = [SA_OAuthTwitterController controllerToEnterCredentialsWithTwitterEngine:_engine delegate:self];  
-            [aViewController presentModalViewController:twitterController animated: YES];     
+            [aViewController presentViewController:twitterController animated:YES completion:nil];
         }
     }
 }

@@ -59,7 +59,7 @@
         loadingView.hidden = YES;
         if (success) {
             NSLog(@"Login is Success -  %i", success);
-            Alert(@"Alert", @"Success");            
+            SCAlert(@"Alert", @"Success");            
         }
     }];
 }
@@ -71,7 +71,7 @@
     [SCTwitter logoutCallback:^(BOOL success) {
         loadingView.hidden = YES;
         NSLog(@"Logout is Success -  %i", success);        
-        Alert(@"Alert", @"Logout successfully");
+        SCAlert(@"Alert", @"Logout successfully");
     }];
 }
 
@@ -82,9 +82,9 @@
         loadingView.hidden = YES;
         if (success) {
             NSLog(@"Message send -  %i \n%@", success, result); 
-            Alert(@"Alert", @"Send message in background");            
+            SCAlert(@"Alert", @"Send message in background");            
         }else {
-            Alert(@"Alert", @"Not Login");            
+            SCAlert(@"Alert", @"Not Login");            
         }
     }];
 }
@@ -98,9 +98,9 @@
         if (success) {
             //Return array NSDictonary
             NSLog(@"%@", result);
-            Alert(@"Alert", @"Request public timeline success");
+            SCAlert(@"Alert", @"Request public timeline success");
         }else {
-            Alert(@"Alert", @"Not Login");   
+            SCAlert(@"Alert", @"Not Login");   
         } 
     }];
 }
@@ -114,9 +114,9 @@
         if (success) {
             //Return array NSDictonary
             NSLog(@"%@", result);
-                Alert(@"Alert", @"Request user timeline success");
+                SCAlert(@"Alert", @"Request user timeline success");
         }else {
-            Alert(@"Alert", @"Not Login");   
+            SCAlert(@"Alert", @"Not Login");   
         }
     }];
 }
@@ -130,9 +130,9 @@
         if (success) {
             //Return array NSDictonary
             NSLog(@"%@", result);
-            Alert(@"Alert", @"Request user information success");   
+            SCAlert(@"Alert", @"Request user information success");   
         }else {
-            Alert(@"Alert", @"Not Login");   
+            SCAlert(@"Alert", @"Not Login");   
         }         
     }];
 }
@@ -145,10 +145,10 @@
         loadingView.hidden = YES;
         if (success) {
             //Return array NSDictonary
-            NSLog(@"%@", result);
+            SCAlert(@"%@", result);
         }else{
             NSLog(@"Error : %@", result);
-            Alert(@"Alert", result);
+            SCAlert(@"Alert", result);
         }
     }];
 }
@@ -163,10 +163,10 @@
         if (success) {
             //Return array NSDictonary
             NSLog(@"%@", result);
-            Alert(@"Alert", @"Request retweet success");   
+            SCAlert(@"Alert", @"Request retweet success");   
         }else{
             NSLog(@"%@", result);
-            Alert(@"Alert", @"Error retweet");   
+            SCAlert(@"Alert", @"Error retweet");   
         }
     }];
     

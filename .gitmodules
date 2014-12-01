@@ -1,3 +1,3 @@
 [submodule "SCTwitter/ExternalFrameworks/Twitter-OAuth-iPhone"]
 	path = SCTwitter/ExternalFrameworks/Twitter-OAuth-iPhone
-	url = git@github.com:lucascorrea/Twitter-OAuth-iPhone.git
+	url = https://github.com/lucascorrea/Twitter-OAuth-iPhone.git

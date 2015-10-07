@@ -1,0 +1,13 @@
+PODS:
+  - TwitterCore (1.11.4)
+  - TwitterKit (1.11.4)
+
+DEPENDENCIES:
+  - TwitterCore
+  - TwitterKit
+
+SPEC CHECKSUMS:
+  TwitterCore: 171dbd2f8d55707397f461af5158d987fb34aa36
+  TwitterKit: e96cc8d3bd32d544b8bc6d1b2febf2eab1c5298e
+
+COCOAPODS: 0.38.2

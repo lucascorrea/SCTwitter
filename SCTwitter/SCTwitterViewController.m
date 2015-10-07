@@ -9,6 +9,8 @@
 #import "SCTwitterViewController.h"
 #import "SCTwitter.h"
 
+#define SCAlert(title,msg) [[[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+
 @implementation SCTwitterViewController
 
 @synthesize messageText;
@@ -21,12 +23,12 @@
     [super viewDidLoad];
     
     //Loading
-    loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
 	loadingView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
 	UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 	[loadingView addSubview:aiView];
 	[aiView startAnimating];
-	aiView.center =  CGPointMake(160, 240);
+	aiView.center =  loadingView.center;
 	[aiView release];
 	[self.view addSubview:loadingView];
 	loadingView.hidden = YES;
@@ -78,7 +80,10 @@
 - (IBAction)postBackgroundButtonAction:(id)sender 
 {
     loadingView.hidden = NO;
-    [SCTwitter postWithMessage:self.messageText.text callback:^(BOOL success, id result) {
+    
+    [SCTwitter postWithMessage:@"Test upload image" uploadPhoto:[UIImage imageNamed:@"Default"] latitude:-46.0123 longitude:-23.5133 callback:^(BOOL success, id result) {
+        
+//    [SCTwitter postWithMessage:self.messageText.text callback:^(BOOL success, id result) {
         loadingView.hidden = YES;
         if (success) {
             NSLog(@"Message send -  %i \n%@", success, result); 

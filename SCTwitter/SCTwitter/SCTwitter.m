@@ -25,13 +25,10 @@
 
 
 #import "SCTwitter.h"
-#import "SA_OAuthTwitterController.h"
-#import "SA_OAuthTwitterEngine.h"
 
-@interface SCTwitter() <SA_OAuthTwitterEngineDelegate, SA_OAuthTwitterControllerDelegate> {
-    SA_OAuthTwitterEngine *_engine;
-    UIViewController *_viewController;
-}
+#define TwitterEndpoint @"https://api.twitter.com/1.1/"
+
+@interface SCTwitter()
 
 - (BOOL)isSessionValid;
 - (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
@@ -45,6 +42,7 @@
 - (void)directMessage:(NSString *)message to:(NSString *)username callback:(void (^)(BOOL success, id result))aCallback;
 - (void)retweetMessageUpdateID:(NSString *)updateID callback:(void (^)(BOOL success, id result))aCallback;
 - (void)postWithMessage:(NSString *)message uploadPhoto:(UIImage *)image latitude:(double)lat longitude:(double)lng callback:(void (^)(BOOL success, id result))aCallback;
+
 @end
 
 
@@ -53,8 +51,6 @@
 
 @synthesize loginCallback;
 @synthesize statusCallback;
-@synthesize userCallback;
-@synthesize directCallback;
 
 
 
@@ -64,15 +60,15 @@
 
 + (SCTwitter *)shared
 {
-	static dispatch_once_t pred;
-	static SCTwitter *_scTwitter = nil;
-	dispatch_once(&pred, ^{ _scTwitter = [[SCTwitter alloc] init]; });
+    static dispatch_once_t pred;
+    static SCTwitter *_scTwitter = nil;
+    dispatch_once(&pred, ^{ _scTwitter = [[SCTwitter alloc] init]; });
     return _scTwitter;
 }
 
 
 
-#pragma mark - 
+#pragma mark -
 #pragma mark - Public Methods
 
 + (void)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret
@@ -82,7 +78,7 @@
 
 + (BOOL)isSessionValid
 {
-   return [[SCTwitter shared] isSessionValid];
+    return [[SCTwitter shared] isSessionValid];
 }
 
 + (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback
@@ -158,23 +154,20 @@
 
 - (void)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret
 {
-    // Initialize Twitter
-    _engine = [[SA_OAuthTwitterEngine alloc] initOAuthWithDelegate:self];  
-    _engine.consumerKey    = consumerKey;
-    _engine.consumerSecret = consumerSecret;
+    [[Twitter sharedInstance] startWithConsumerKey:consumerKey consumerSecret:consumerSecret];
 }
 
-- (BOOL)isSessionValid 
+- (BOOL)isSessionValid
 {
-    return _engine && [_engine isAuthorized];
+    NSString *userID = [Twitter sharedInstance].sessionStore.session.userID;
+    self.apiClient = [[TWTRAPIClient alloc] initWithUserID:userID];
+    return [Twitter sharedInstance].sessionStore.session;
 }
 
 - (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback
 {
-    if (!_engine.consumerKey || !_engine.consumerSecret) {
+    if (![Twitter sharedInstance].authConfig) {
         NSString *error = @"Missing your application credentials ConsumerKey and ConsumerSecret. You cannot run the app until you provide this in the code.";
-        
-        SCAlert(@"ERROR", error);
         
         if (aCallback) {
             aCallback(NO);
@@ -191,20 +184,23 @@
         } else {
             // Autorize twitter
             self.loginCallback = aCallback;
-            UIViewController *twitterController = [SA_OAuthTwitterController controllerToEnterCredentialsWithTwitterEngine:_engine delegate:self];  
-            [aViewController presentViewController:twitterController animated:YES completion:nil];
+            [[Twitter sharedInstance] logInWithCompletion:^(TWTRSession *session, NSError *error) {
+                if (session) {
+                    NSString *userID = [Twitter sharedInstance].sessionStore.session.userID;
+                    self.apiClient = [[TWTRAPIClient alloc] initWithUserID:userID];
+                    self.loginCallback(YES);
+                } else {
+                    self.loginCallback(NO);
+                }
+            }];
         }
     }
 }
 
 - (void)logoutCallback:(void (^)(BOOL success))aCallback
 {
-    [_engine clearAccessToken];
-    
-    // Remove the stored twitter credentials
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:kTwitterData];
-    [defaults synchronize];
+    [[Twitter sharedInstance] logOut];
+    [[Twitter sharedInstance] logOutGuest];
     
     // Call the logout callback
     if (aCallback) {
@@ -223,7 +219,9 @@
         
     }else{
         self.statusCallback = aCallback;
-        [_engine sendUpdate:[NSString stringWithFormat:@"%@", message]];
+        NSString *statusesEndpoint = [NSString stringWithFormat:@"%@statuses/update.json", TwitterEndpoint];
+        NSDictionary *params = @{@"status" : message};
+        [self requestWithMethod:@"POST" URL:statusesEndpoint params:params];
     }
 }
 
@@ -238,7 +236,8 @@
         
     }else{
         self.statusCallback = aCallback;
-        [_engine getPublicTimeline];
+        NSString *statusesEndpoint = [NSString stringWithFormat:@"%@statuses/home_timeline.json", TwitterEndpoint];
+        [self requestWithMethod:@"GET" URL:statusesEndpoint params:nil];
     }
 }
 
@@ -253,7 +252,11 @@
         
     }else{
         self.statusCallback = aCallback;
-        [_engine getUserTimelineFor:username sinceID:sinceID startingAtPage:page count:count];
+        
+        NSString *statusesEndpoint = [NSString stringWithFormat:@"%@statuses/user_timeline.json", TwitterEndpoint];
+        NSDictionary *params = @{@"screen_name" : username,
+                                 @"count" : [NSString stringWithFormat:@"%d", count]};
+        [self requestWithMethod:@"GET" URL:statusesEndpoint params:params];
     }
 }
 
@@ -269,11 +272,16 @@
     }else{
         
         if (username == nil) {
-            username = _engine.username;
+            username = [Twitter sharedInstance].session.userName;
         }
         
-        self.userCallback = aCallback;
-        [_engine getUserInformationFor:username];
+        self.statusCallback = aCallback;
+        
+        NSString *statusesEndpoint = [NSString stringWithFormat:@"%@users/show.json", TwitterEndpoint];
+        NSDictionary *params = @{@"screen_name" : username,
+                                 @"user_id" : [Twitter sharedInstance].sessionStore.session.userID};
+        
+        [self requestWithMethod:@"GET" URL:statusesEndpoint params:params];
     }
 }
 
@@ -287,11 +295,11 @@
         }
         
     }else{
-        self.userCallback = aCallback;
-        [_engine getFriends];
+        self.statusCallback = aCallback;
+        NSString *statusesEndpoint = [NSString stringWithFormat:@"%@friends/ids.json", TwitterEndpoint];
+        [self requestWithMethod:@"GET" URL:statusesEndpoint params:nil];
     }
 }
-
 
 - (void)getFollowersCallback:(void (^)(BOOL success, id result))aCallback;
 {
@@ -303,8 +311,9 @@
         }
         
     }else{
-        self.userCallback = aCallback;
-        [_engine getFollowers];
+        self.statusCallback = aCallback;
+        NSString *statusesEndpoint = [NSString stringWithFormat:@"%@followers/ids.json", TwitterEndpoint];
+        [self requestWithMethod:@"GET" URL:statusesEndpoint params:nil];
     }
 }
 
@@ -325,8 +334,12 @@
             return;
         }
         
-        self.directCallback = aCallback;
-        [_engine sendDirectMessage:message to:username];
+        self.statusCallback = aCallback;
+        self.statusCallback = aCallback;
+        NSString *statusesEndpoint = [NSString stringWithFormat:@"%@direct_messages/new.json", TwitterEndpoint];
+        NSDictionary *params = @{@"text" : message,
+                                 @"screen_name" : username};
+        [self requestWithMethod:@"POST" URL:statusesEndpoint params:params];
     }
 }
 
@@ -347,7 +360,8 @@
         }
         
         self.statusCallback = aCallback;
-        [_engine sendRetweet:updateID];
+        NSString *statusesEndpoint = [NSString stringWithFormat:@"%@statuses/retweets/%@.json", TwitterEndpoint, updateID];
+        [self requestWithMethod:@"POST" URL:statusesEndpoint params:nil];
     }
 }
 
@@ -361,109 +375,49 @@
         }
         
     }else{
-                
+        
         self.statusCallback = aCallback;
-        [_engine sendUpdate:message uploadPhoto:image latitude:lat longitude:lng]; 
+        NSString *media = @"https://upload.twitter.com/1.1/media/upload.json";
+        NSData *imageData = UIImageJPEGRepresentation(image, 0.9);
+        NSString *imageString = [imageData base64EncodedStringWithOptions:0];
+        
+        NSError *clientError;
+        NSURLRequest *request = [self.apiClient URLRequestWithMethod:@"POST" URL:media parameters:@{@"media":imageString} error:&clientError];
+        
+        [[[Twitter sharedInstance] APIClient] sendTwitterRequest:request completion:^(NSURLResponse *urlResponse, NSData *data, NSError *connectionError) {
+            
+            NSError *jsonError;
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+            
+            NSString *statusesEndpoint = [NSString stringWithFormat:@"%@statuses/update.json", TwitterEndpoint];
+            NSDictionary *params = @{@"status" : message,
+                                     @"lat": [NSString stringWithFormat:@"%f", lat],
+                                     @"long": [NSString stringWithFormat:@"%f", lng],
+                                     @"media_ids" : json[@"media_id_string"]};
+            [self requestWithMethod:@"POST" URL:statusesEndpoint params:params];
+            
+        }];
     }
 }
 
 
-
-#pragma mark -
-#pragma mark - SA_OAuthTwitterControllerDelegate Methods
-
-- (void) OAuthTwitterController: (SA_OAuthTwitterController *) controller authenticatedWithUsername: (NSString *) username 
+- (void)requestWithMethod:(NSString *)method URL:(NSString *)url params:(NSDictionary *)params
 {
-    // Call the login callback
-    if (self.loginCallback) {
-        self.loginCallback(YES);
-        self.loginCallback = nil;
-    }
-}
-
-- (void) OAuthTwitterControllerFailed: (SA_OAuthTwitterController *) controller
-{
-    if (self.loginCallback) {
-        self.loginCallback(NO);
-        self.loginCallback = nil;
-    }
-}
-
-- (void) OAuthTwitterControllerCanceled: (SA_OAuthTwitterController *) controller
-{
-    if (self.loginCallback) {
-        self.loginCallback(NO);
-        self.loginCallback = nil;
-    }    
-}
-
-
-#pragma mark -
-#pragma mark - SA_OAuthTwitterEngineDelegate Methods
-
-- (void) storeCachedTwitterOAuthData: (NSString *) data forUsername: (NSString *) username 
-{
+    NSError *clientError;
+    NSURLRequest *request = [self.apiClient URLRequestWithMethod:method URL:url parameters:params error:&clientError];
     
-    // Store the twitter credentials
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:data forKey:kTwitterData];
-    [defaults synchronize];
-    
-}
-
-- (NSString *) cachedTwitterOAuthDataForUsername: (NSString *) username 
-{
-    
-    // Return the last stored auth data (we don't care about username)
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    
-    return [defaults objectForKey:kTwitterData];
-}
-
-- (void) twitterOAuthConnectionFailedWithData: (NSData *) data 
-{
-    NSLog(@"Twitter connection failed");
-}
-
-
-
-#pragma mark -
-#pragma mark - MGTwitterEngineDelegate methods
-
-- (void)requestFailed:(NSString *)connectionIdentifier withError:(NSError *)error
-{
-    if (self.statusCallback) {
-        self.statusCallback(NO, error);
-        self.statusCallback = nil;
-    }
-    
-    if (self.userCallback) {
-        self.userCallback(NO, error);
-        self.userCallback = nil;
-    }
-}
-
-- (void)statusesReceived:(NSArray *)statuses forRequest:(NSString *)connectionIdentifier
-{
-    if (self.statusCallback) {
-        self.statusCallback(YES, statuses);
-        self.statusCallback = nil;
-    }
-}
-
-- (void)userInfoReceived:(NSArray *)userInfo forRequest:(NSString *)connectionIdentifier
-{
-    if (self.userCallback) {
-        self.userCallback(YES, userInfo);
-        self.userCallback = nil;
-    }
-}
-
-- (void)directMessagesReceived:(NSArray *)messages forRequest:(NSString *)connectionIdentifier
-{
-    if (self.directCallback) {
-        self.directCallback(YES, messages);
-        self.directCallback = nil;
+    if (request) {
+        [self.apiClient sendTwitterRequest:request completion:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            if (data) {
+                NSError *jsonError;
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                self.statusCallback(YES, json);
+            } else {
+                self.statusCallback(NO, connectionError);
+            }
+        }];
+    }else {
+        self.statusCallback(NO, clientError);
     }
 }
 

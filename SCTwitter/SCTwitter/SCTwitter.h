@@ -24,24 +24,17 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <TwitterKit/TwitterKit.h>
 
-#define SCAlert(title,msg) [[[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-
-#define kTwitterData @"twitterData"
 
 typedef void(^SCTwitterCallback)(BOOL success);
 typedef void(^SCTwitterStatusCallback)(BOOL success, id result);
-typedef void(^SCTwitterUserCallback)(BOOL success, id result);
-typedef void(^SCTwitterDirectCallback)(BOOL success, id result);
-
 
 @interface SCTwitter : NSObject
 
 @property (nonatomic, copy) SCTwitterCallback loginCallback;
 @property (nonatomic, copy) SCTwitterStatusCallback statusCallback;
-@property (nonatomic, copy) SCTwitterUserCallback userCallback;
-@property (nonatomic, copy) SCTwitterDirectCallback directCallback;
-
+@property (strong, nonatomic) TWTRAPIClient *apiClient;
 
 + (void)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 + (BOOL)isSessionValid;

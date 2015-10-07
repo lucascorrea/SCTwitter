@@ -21,9 +21,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
-    
-    //#define kConsumerKey @"D6vneoIuMP0pdBZJAV7gg"
-    //#define kConsumerSecret @"wWc59eahiaES9ZCZ7wp28Rw4hcURG4fmIXvvwJiaR8"
    [SCTwitter initWithConsumerKey:@"D6vneoIuMP0pdBZJAV7gg" consumerSecret:@"wWc59eahiaES9ZCZ7wp28Rw4hcURG4fmIXvvwJiaR8"];
     return YES;
 }

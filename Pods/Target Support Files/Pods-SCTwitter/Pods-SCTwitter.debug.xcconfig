@@ -1,0 +1,6 @@
+FRAMEWORK_SEARCH_PATHS = "$(PODS_ROOT)/TwitterCore" "$(PODS_ROOT)/TwitterKit"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/TwitterCore" "${PODS_ROOT}/Headers/Public/TwitterCore/TwitterCore" "${PODS_ROOT}/Headers/Public/TwitterKit" "${PODS_ROOT}/Headers/Public/TwitterKit/TwitterKit"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/TwitterCore" -isystem "${PODS_ROOT}/Headers/Public/TwitterCore/TwitterCore" -isystem "${PODS_ROOT}/Headers/Public/TwitterKit" -isystem "${PODS_ROOT}/Headers/Public/TwitterKit/TwitterKit"
+OTHER_LDFLAGS = $(inherited) -ObjC -framework "Accounts" -framework "CoreData" -framework "CoreGraphics" -framework "CoreText" -framework "Foundation" -framework "QuartzCore" -framework "Security" -framework "Social" -framework "TwitterCore" -framework "TwitterKit" -framework "UIKit"
+PODS_ROOT = ${SRCROOT}/Pods

@@ -1,26 +1,27 @@
 The SCTwitter framework is to facilitate the implementation of twitter, simpler and cleaner using blocks
 
+	  TwitterKit 1.1.1 for iOS
+	  TwitterCore 1.1.1 for iOS
+
 ![]( http://www.lucascorrea.com/sctwitter2.png)
+
 
 Installation
 =================
-Run the command
-
-	git clone https://github.com/lucascorrea/SCTwitter.git
-
-Then we need to get the submodules
-
-	git submodule update --init --recursive
+Before you need to follow the guide to begin using Twitter SDK for iOS -
+[Getting Started with the Twitter SDK](https://docs.fabric.io/ios/twitter/configure-twitter-app.html)
 
 
 
 Getting Started
 =================
-Now we need to copy the `SCTwitter.h` `SCTwitter.m` and `Twitter+OAuth` for your project.
+Using [CocoaPods](http://cocoapods.org) to get start, you can add following line to your Podfile:
+
+	  pod 'SCTwitter'
 	
 Now in it's `AppDelegate` need to add credentials ConsumerKey and ConsumerSecret
 
-	#import "SCTwitter.h"
+	#import <SCTwitter/SCTwitter.h>
 	@implementation AppDelegate
 
 	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -29,15 +30,6 @@ Now in it's `AppDelegate` need to add credentials ConsumerKey and ConsumerSecret
     		[SCTwitter initWithConsumerKey:@"D6vneoIuMP0pdBZJAV7gg" consumerSecret:@"wWc59eahiaES9ZCZ7wp28Rw4hcURG4fmIXvvwJiaR8"];
     		return YES;
 	}
-
-
-In your project will build on Settings > Header Search Paths - and add this line below
-	
-	${SDKROOT}/usr/include/libxml2
-
-Finally add the framework
-
-	libxml2.dylib
 
 Methods
 ===========
@@ -68,7 +60,7 @@ To use the component is very easy. Import the header for your class.
 
 	#pragma mark - Button Action
 	- (IBAction)login:(id)sender {    
-	 [SCTwitter loginViewControler:self callback:^(BOOL success){
+	 [SCTwitter loginViewControler:self callback:^(BOOL success, id result){
     
      }];
 	}
@@ -108,7 +100,7 @@ License
 
 SCTwitter is licensed under the MIT License:
 
-Copyright (c) 2012 Lucas Correa (http://www.lucascorrea.com/)
+Copyright (c) 2011-2015 Lucas Correa (http://www.lucascorrea.com/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

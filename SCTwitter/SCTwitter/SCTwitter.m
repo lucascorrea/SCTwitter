@@ -31,8 +31,8 @@
 @interface SCTwitter()
 
 - (BOOL)isSessionValid;
-- (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
-- (void)logoutCallback:(void (^)(BOOL success))aCallback;
+- (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success, id result))aCallback;
+- (void)logoutCallback:(void (^)(BOOL success, id result))aCallback;
 - (void)postWithMessage:(NSString *)message callback:(void (^)(BOOL success, id result))aCallback;
 - (void)getPublicTimelineWithCallback:(void (^)(BOOL success, id result))aCallback;
 - (void)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)page count:(int)count callback:(void (^)(BOOL success, id result))aCallback;
@@ -48,10 +48,6 @@
 
 
 @implementation SCTwitter
-
-@synthesize loginCallback;
-@synthesize statusCallback;
-
 
 
 #pragma mark -
@@ -81,12 +77,12 @@
     return [[SCTwitter shared] isSessionValid];
 }
 
-+ (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback
++ (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success, id result))aCallback
 {
     [[SCTwitter shared] loginViewControler:aViewController callback:aCallback];
 }
 
-+ (void)logoutCallback:(void (^)(BOOL success))aCallback
++ (void)logoutCallback:(void (^)(BOOL success, id result))aCallback
 {
     [[SCTwitter shared] logoutCallback:aCallback];
 }
@@ -154,6 +150,11 @@
 
 - (void)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret
 {
+    if (consumerKey.length == 0 || consumerSecret.length == 0) {
+        NSLog(@"\n\nMissing your application credentials ConsumerKey and ConsumerSecret. You cannot run the app until you provide this in the code.\n\n");
+        return;
+    }
+    
     [[Twitter sharedInstance] startWithConsumerKey:consumerKey consumerSecret:consumerSecret];
 }
 
@@ -164,47 +165,38 @@
     return [Twitter sharedInstance].sessionStore.session;
 }
 
-- (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback
+- (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success, id result))aCallback
 {
-    if (![Twitter sharedInstance].authConfig) {
-        NSString *error = @"Missing your application credentials ConsumerKey and ConsumerSecret. You cannot run the app until you provide this in the code.";
+    if ([self isSessionValid]) {
         
+        // Call the login callback if we have one
         if (aCallback) {
-            aCallback(NO);
+            aCallback(YES, @"Logged");
         }
-        return;
-    }else {
-        if ([self isSessionValid]) {
-            
-            // Call the login callback if we have one
-            if (aCallback) {
-                aCallback(YES);
+        
+    } else {
+        // Autorize twitter
+        self.callback = aCallback;
+        [[Twitter sharedInstance] logInWithCompletion:^(TWTRSession *session, NSError *error) {
+            if (session) {
+                NSString *userID = [Twitter sharedInstance].sessionStore.session.userID;
+                self.apiClient = [[TWTRAPIClient alloc] initWithUserID:userID];
+                self.callback(YES, @"Logged");
+            } else {
+                self.callback(NO, error);
             }
-            
-        } else {
-            // Autorize twitter
-            self.loginCallback = aCallback;
-            [[Twitter sharedInstance] logInWithCompletion:^(TWTRSession *session, NSError *error) {
-                if (session) {
-                    NSString *userID = [Twitter sharedInstance].sessionStore.session.userID;
-                    self.apiClient = [[TWTRAPIClient alloc] initWithUserID:userID];
-                    self.loginCallback(YES);
-                } else {
-                    self.loginCallback(NO);
-                }
-            }];
-        }
+        }];
     }
 }
 
-- (void)logoutCallback:(void (^)(BOOL success))aCallback
+- (void)logoutCallback:(void (^)(BOOL success, id result))aCallback
 {
     [[Twitter sharedInstance] logOut];
     [[Twitter sharedInstance] logOutGuest];
     
     // Call the logout callback
     if (aCallback) {
-        aCallback(YES);
+        aCallback(YES, @"OK");
     }
 }
 
@@ -218,7 +210,7 @@
         }
         
     }else{
-        self.statusCallback = aCallback;
+        self.callback = aCallback;
         NSString *statusesEndpoint = [NSString stringWithFormat:@"%@statuses/update.json", TwitterEndpoint];
         NSDictionary *params = @{@"status" : message};
         [self requestWithMethod:@"POST" URL:statusesEndpoint params:params];
@@ -235,7 +227,7 @@
         }
         
     }else{
-        self.statusCallback = aCallback;
+        self.callback = aCallback;
         NSString *statusesEndpoint = [NSString stringWithFormat:@"%@statuses/home_timeline.json", TwitterEndpoint];
         [self requestWithMethod:@"GET" URL:statusesEndpoint params:nil];
     }
@@ -251,7 +243,7 @@
         }
         
     }else{
-        self.statusCallback = aCallback;
+        self.callback = aCallback;
         
         NSString *statusesEndpoint = [NSString stringWithFormat:@"%@statuses/user_timeline.json", TwitterEndpoint];
         NSDictionary *params = @{@"screen_name" : username,
@@ -275,7 +267,7 @@
             username = [Twitter sharedInstance].session.userName;
         }
         
-        self.statusCallback = aCallback;
+        self.callback = aCallback;
         
         NSString *statusesEndpoint = [NSString stringWithFormat:@"%@users/show.json", TwitterEndpoint];
         NSDictionary *params = @{@"screen_name" : username,
@@ -295,7 +287,7 @@
         }
         
     }else{
-        self.statusCallback = aCallback;
+        self.callback = aCallback;
         NSString *statusesEndpoint = [NSString stringWithFormat:@"%@friends/ids.json", TwitterEndpoint];
         [self requestWithMethod:@"GET" URL:statusesEndpoint params:nil];
     }
@@ -311,7 +303,7 @@
         }
         
     }else{
-        self.statusCallback = aCallback;
+        self.callback = aCallback;
         NSString *statusesEndpoint = [NSString stringWithFormat:@"%@followers/ids.json", TwitterEndpoint];
         [self requestWithMethod:@"GET" URL:statusesEndpoint params:nil];
     }
@@ -334,8 +326,7 @@
             return;
         }
         
-        self.statusCallback = aCallback;
-        self.statusCallback = aCallback;
+        self.callback = aCallback;
         NSString *statusesEndpoint = [NSString stringWithFormat:@"%@direct_messages/new.json", TwitterEndpoint];
         NSDictionary *params = @{@"text" : message,
                                  @"screen_name" : username};
@@ -359,7 +350,7 @@
             return;
         }
         
-        self.statusCallback = aCallback;
+        self.callback = aCallback;
         NSString *statusesEndpoint = [NSString stringWithFormat:@"%@statuses/retweets/%@.json", TwitterEndpoint, updateID];
         [self requestWithMethod:@"POST" URL:statusesEndpoint params:nil];
     }
@@ -376,7 +367,7 @@
         
     }else{
         
-        self.statusCallback = aCallback;
+        self.callback = aCallback;
         NSString *media = @"https://upload.twitter.com/1.1/media/upload.json";
         NSData *imageData = UIImageJPEGRepresentation(image, 0.9);
         NSString *imageString = [imageData base64EncodedStringWithOptions:0];
@@ -411,13 +402,13 @@
             if (data) {
                 NSError *jsonError;
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-                self.statusCallback(YES, json);
+                self.callback(YES, json);
             } else {
-                self.statusCallback(NO, connectionError);
+                self.callback(NO, connectionError);
             }
         }];
     }else {
-        self.statusCallback(NO, clientError);
+        self.callback(NO, clientError);
     }
 }
 

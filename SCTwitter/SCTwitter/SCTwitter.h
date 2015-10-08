@@ -27,19 +27,17 @@
 #import <TwitterKit/TwitterKit.h>
 
 
-typedef void(^SCTwitterCallback)(BOOL success);
-typedef void(^SCTwitterStatusCallback)(BOOL success, id result);
+typedef void(^SCTwitterCallback)(BOOL success, id result);
 
 @interface SCTwitter : NSObject
 
-@property (nonatomic, copy) SCTwitterCallback loginCallback;
-@property (nonatomic, copy) SCTwitterStatusCallback statusCallback;
+@property (nonatomic, copy) SCTwitterCallback callback;
 @property (strong, nonatomic) TWTRAPIClient *apiClient;
 
 + (void)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 + (BOOL)isSessionValid;
-+ (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
-+ (void)logoutCallback:(void(^)(BOOL success))aCallback;
++ (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success, id result))aCallback;
++ (void)logoutCallback:(void(^)(BOOL success, id result))aCallback;
 + (void)postWithMessage:(NSString *)message callback:(void (^)(BOOL success, id result))aCallback;
 + (void)getPublicTimelineWithCallback:(void (^)(BOOL success, id result))aCallback;
 + (void)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)page count:(int)count callback:(void (^)(BOOL success, id result))aCallback;

@@ -57,7 +57,7 @@
 {
     loadingView.hidden = NO;
     
-    [SCTwitter loginViewControler:self callback:^(BOOL success){
+    [SCTwitter loginViewControler:self callback:^(BOOL success, id result){
         loadingView.hidden = YES;
         if (success) {
             NSLog(@"Login is Success -  %i", success);
@@ -70,7 +70,7 @@
 {
     loadingView.hidden = NO;
     
-    [SCTwitter logoutCallback:^(BOOL success) {
+    [SCTwitter logoutCallback:^(BOOL success, id result) {
         loadingView.hidden = YES;
         NSLog(@"Logout is Success -  %i", success);        
         SCAlert(@"Alert", @"Logout successfully");

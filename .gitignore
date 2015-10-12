@@ -2,6 +2,8 @@
 
 #Xcode
 
+*.project.xcworkspace
+
 build/*
 
 *.pbxuser
@@ -29,3 +31,8 @@ xcuserdata*
 profile
 
 *.moved-aside
+
+Pods/
+
+Podfile.lock
+

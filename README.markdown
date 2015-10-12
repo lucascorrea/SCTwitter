@@ -37,8 +37,8 @@ Methods
 There is 12 methods:
 
 	+ (BOOL)isSessionValid;
-	+ (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success))aCallback;
-	+ (void)logoutCallback:(void(^)(BOOL success))aCallback;
+	+ (void)loginViewControler:(UIViewController *)aViewController callback:(void (^)(BOOL success, id result))aCallback;
+	+ (void)logoutCallback:(void(^)(BOOL success, id result))aCallback;
 	+ (void)postWithMessage:(NSString *)message callback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)getPublicTimelineWithCallback:(void (^)(BOOL success, id result))aCallback;
 	+ (void)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)page count:(int)count callback:(void (^)(BOOL success, id result))aCallback;

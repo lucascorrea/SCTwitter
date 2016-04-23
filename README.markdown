@@ -3,7 +3,7 @@ The SCTwitter framework is to facilitate the implementation of twitter, simpler 
 	  TwitterKit 1.1.1 for iOS
 	  TwitterCore 1.1.1 for iOS
 
-![]( http://www.lucascorrea.com/sctwitter2.png)
+![]( http://www.lucascorrea.com/images/sctwitter2.png)
 
 
 Installation
@@ -100,7 +100,7 @@ License
 
 SCTwitter is licensed under the MIT License:
 
-Copyright (c) 2011-2015 Lucas Correa (http://www.lucascorrea.com/)
+Copyright (c) 2011-2016 Lucas Correa (http://www.lucascorrea.com/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
